@@ -38,25 +38,22 @@ def predict_sales_price():
         'Product_Type': property_data['Product_Type'],
         'Product_MRP': property_data['Product_MRP'],
         'Product_Weight': property_data['Product_Weight'],
-        'Product_Sugar_Content': property_data['Product_Sugar_Content'] 
+        'Product_Sugar_Content': property_data['Product_Sugar_Content']
     }
 
     # Convert the extracted data into a Pandas DataFrame
     input_data = pd.DataFrame([sample])
 
-    # Make prediction (get log_price)
+    # Make prediction
     predicted_sales_price = model.predict(input_data)[0]
 
-    # Calculate actual price
-    predicted_price = np.exp(predicted_sales_price)
-
-    # Convert predicted_price to Python float
-    predicted_price = round(float(predicted_price), 2)
-    # The conversion above is needed as we convert the model prediction (log price) to actual price using np.exp, which returns predictions as NumPy float32 values.
+    # Convert predicted_sales_price to Python float
+    predicted_sales_price = round(float(predicted_sales_price), 2)
+    # The conversion above is needed as model predictions are NumPy float32 values.
     # When we send this value directly within a JSON response, Flask's jsonify function encounters a datatype error
 
     # Return the actual price
-    return jsonify({'Predicted Price (in dollars)': predicted_price})
+    return jsonify({'Predicted Price (in dollars)': predicted_sales_price})
 
 
 # Define an endpoint for batch prediction (POST request)
@@ -73,14 +70,14 @@ def predict_sales_price_batch():
     # Read the CSV file into a Pandas DataFrame
     input_data = pd.read_csv(file)
 
-    # Make predictions for all properties in the DataFrame (get log_prices)
+    # Make predictions for all properties in the DataFrame
     predicted_sales_prices = model.predict(input_data).tolist()
 
-    # Calculate actual prices
-    predicted_prices = [round(float(np.exp(log_price)), 2) for log_price in predicted_log_prices]
+    # Round predicted prices
+    predicted_prices = [round(float(price), 2) for price in predicted_sales_prices]
 
-    # Create a dictionary of predictions with property IDs as keys
-    product_ids = input_data['Product_Id'].tolist()  #  'product_id' is the property ID column and it's unique for the rows in the training dataset
+    # Create a dictionary of predictions with product IDs as keys
+    product_ids = input_data['Product_Id'].tolist()  # 'Product_Id' is the product ID column
     output_dict = dict(zip(product_ids, predicted_prices))  # Use actual prices
 
     # Return the predictions dictionary as a JSON response
