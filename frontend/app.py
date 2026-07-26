@@ -14,7 +14,7 @@ st.subheader("Online Prediction")
 Store_Id = st.selectbox("Store ID", ["OUT001", "OUT002", "OUT003", "OUT004"])
 Store_Type = st.selectbox("Store Type", ["Supermarket Type2", "Departmental Store", "Supermarket Type1", "Food Mart"])
 Product_Type = st.selectbox("Product Type", ["Frozen Foods", "Dairy", "Canned","Baking Goods", "Health and Hygiene", "Snack Foods", "Meat", "Household", "Hard Drinks","Fruits and Vegetables", "Breads", "Soft Drinks", "Breakfast", "Others","Starchy Foods","Seafood"])
-Product_MRP = st.number_input("Product MRP", min_value=1, step=1, value=2)
+Product_MRP = st.number_input("Product MRP")
 Product_Weight = st.number_input("Product Weight")
 Product_Sugar_Content = st.selectbox("Product Sugar Content", ["Low Sugar", "Regular", "No Sugar"])
 
